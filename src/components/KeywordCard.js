@@ -10,7 +10,9 @@ function KeywordCard({ keyword, description, url, timestamp }) {
   return (
     <div className="keyword-card">
       <div className="keyword-card__header">
-        <h2 className="keyword-card__term">{keyword}</h2>
+        <h2 className="keyword-card__term">
+          {keyword.charAt(0).toUpperCase() + keyword.slice(1)}
+        </h2>
         {formattedTime && (
           <span className="keyword-card__timestamp">{formattedTime}</span>
         )}

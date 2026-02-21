@@ -59,18 +59,22 @@ export const selectAllKeywords = (state) => {
   const { items } = state.keywords;
   if (!items || items.length === 0) return [];
 
+  const INVALID_PATTERN = /\b(na|no|none|n\/a)\b/;
+
   return [...items]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     .map((row) => {
       const parsed = parseKeywordColumn(row.keyword);
+      const keywordLower = (parsed.keyword ?? '').trim().toLowerCase();
       return {
         id: row.id,
         timestamp: row.created_at,
-        keyword: parsed.keyword ?? '',
+        keyword: keywordLower,
         description: parsed.description ?? '',
-        url: parsed.url || mockUrl(parsed.keyword ?? row.keyword),
+        url: parsed.url || mockUrl(keywordLower),
       };
-    });
+    })
+    .filter((kw) => kw.keyword && !INVALID_PATTERN.test(kw.keyword));
 };
 
 export default keywordsSlice.reducer;
