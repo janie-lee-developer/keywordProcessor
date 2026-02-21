@@ -1,6 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { supabase, TABLE_NAME } from '../supabaseClient';
 
+function parseKeywordColumn(raw) {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return { keyword: raw, description: '', url: '' };
+  }
+}
+
 function mockUrl(keyword) {
   return `https://en.wikipedia.org/wiki/${encodeURIComponent(keyword)}`;
 }
@@ -53,13 +61,16 @@ export const selectAllKeywords = (state) => {
 
   return [...items]
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    .map((row) => ({
-      id: row.id,
-      timestamp: row.created_at,
-      keyword: row.keyword ?? '',
-      description: row.description ?? `A term related to: ${row.keyword}`,
-      url: row.url || mockUrl(row.keyword),
-    }));
+    .map((row) => {
+      const parsed = parseKeywordColumn(row.keyword);
+      return {
+        id: row.id,
+        timestamp: row.created_at,
+        keyword: parsed.keyword ?? '',
+        description: parsed.description ?? '',
+        url: parsed.url || mockUrl(parsed.keyword ?? row.keyword),
+      };
+    });
 };
 
 export default keywordsSlice.reducer;
