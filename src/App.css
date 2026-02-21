@@ -1,0 +1,119 @@
+/* ── Global reset ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #f4f6fa;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── App shell ────────────────────────────────────────────── */
+.app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.app__header {
+  margin-bottom: 36px;
+}
+
+.app__title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #1a1a2e;
+}
+
+.app__subtitle {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+/* ── Status messages ──────────────────────────────────────── */
+.app__status {
+  font-size: 0.95rem;
+  color: #6b7280;
+  padding: 16px 0;
+}
+
+.app__status--error {
+  color: #dc2626;
+}
+
+/* ── Keyword list ─────────────────────────────────────────── */
+.keyword-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Keyword card ─────────────────────────────────────────── */
+.keyword-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease;
+}
+
+.keyword-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Header row: term + timestamp */
+.keyword-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.keyword-card__term {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.keyword-card__timestamp {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Definition */
+.keyword-card__definition {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #374151;
+  margin-bottom: 24px;
+}
+
+/* Source link */
+.keyword-card__source {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4f46e5;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.keyword-card__source:hover {
+  color: #3730a3;
+  border-bottom-color: #3730a3;
+}
