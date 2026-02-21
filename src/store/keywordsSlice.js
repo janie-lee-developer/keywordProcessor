@@ -1,20 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { supabase, TABLE_NAME } from '../supabaseClient';
 
-// Parses the `text` column (JSON string) into { keyword, description, url }
-export function parseTextColumn(text) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    return { keyword: text, description: '', url: '' };
-  }
+function mockUrl(keyword) {
+  return `https://en.wikipedia.org/wiki/${encodeURIComponent(keyword)}`;
 }
 
 export const fetchKeywords = createAsyncThunk('keywords/fetchAll', async () => {
   const { data, error } = await supabase
     .from(TABLE_NAME)
     .select('*')
-    .order('timestamp', { ascending: false });
+    .order('created_at', { ascending: false });
 
   if (error) throw new Error(error.message);
   return data;
@@ -23,12 +18,11 @@ export const fetchKeywords = createAsyncThunk('keywords/fetchAll', async () => {
 const keywordsSlice = createSlice({
   name: 'keywords',
   initialState: {
-    items: [],    // raw rows from Supabase: [{ id, timestamp, text }, ...]
+    items: [],
     loading: false,
     error: null,
   },
   reducers: {
-    // Called when a real-time INSERT arrives
     addKeyword: (state, action) => {
       state.items.unshift(action.payload);
     },
@@ -52,23 +46,20 @@ const keywordsSlice = createSlice({
 
 export const { addKeyword } = keywordsSlice.actions;
 
-// Returns all rows sorted latest-first, with text parsed into keyword/description/url
+// Returns all rows sorted latest-first
 export const selectAllKeywords = (state) => {
   const { items } = state.keywords;
   if (!items || items.length === 0) return [];
 
   return [...items]
-    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-    .map((row) => {
-      const parsed = parseTextColumn(row.text);
-      return {
-        id: row.id,
-        timestamp: row.timestamp,
-        keyword: parsed.keyword ?? '',
-        description: parsed.description ?? '',
-        url: parsed.url ?? '',
-      };
-    });
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .map((row) => ({
+      id: row.id,
+      timestamp: row.created_at,
+      keyword: row.keyword ?? '',
+      description: row.description ?? `A term related to: ${row.keyword}`,
+      url: row.url || mockUrl(row.keyword),
+    }));
 };
 
 export default keywordsSlice.reducer;
